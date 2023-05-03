@@ -12,7 +12,7 @@ Run commands:
  - dotnet ef database update
 
 To seed:
- -dotnet run seeddata
+ - dotnet run seeddata
  
  
  Proceed tests on:
