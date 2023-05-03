@@ -8,5 +8,5 @@ public interface IMovieRepository
     Task<List<Movie>> GetAllAsync();
     Task<Movie?> GetByIdAsync(int Id);
     Task<Movie> GetBiggestPrizeRange();
-    Task<Movie> GetTwoFastestPrizes()
+    Task<Movie> GetTwoFastestPrizes();
 }
