@@ -30,21 +30,20 @@ namespace MoviesAPI.Repository
 
         public async Task<PrizeInterval> GetBiggestPrizeRange()
         {
-            var movies = await _context.Movies
+            var winnerMovies = await _context.Movies
+                .Where(p => p.Winner == true)
                 .AsNoTracking()
                 .ToListAsync();
-            
-            var winnerMovies = movies.Where(p => p.Winner == true).ToList();
 
             var newMovies = GetSplitedProducers(winnerMovies);
 
-            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 0).ToList();
+            var groupProducers = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
 
             var minInterval = 0;
             
             PrizeInterval prizeInt = null;
 
-            query.ForEach(q =>
+            groupProducers.ForEach(q =>
             {
                 var min = q.Select(p => p.Year).Min();
                 var max = q.Select(p => p.Year).Max();
@@ -68,21 +67,20 @@ namespace MoviesAPI.Repository
 
         public async Task<PrizeInterval> GetTwoFastestPrizes()
         {
-            var movies = await _context.Movies
+            var winnerMovies = await _context.Movies
+                .Where(p => p.Winner == true)
                 .AsNoTracking()
-                .ToListAsync();
-
-            var winnerMovies = movies.Where(p => p.Winner == true).ToList();
+                .ToListAsync();            
 
             var newMovies = GetSplitedProducers(winnerMovies);
 
-            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 0).ToList();
+            var groupProducers = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
 
             var maxInterval = 999999;
 
             PrizeInterval prizeInt = null;
 
-            query.ForEach(q =>
+            groupProducers.ForEach(q =>
             {
                 var min = q.Select(p => p.Year).Min();
                 var max = q.Select(p => p.Year).Max();
