@@ -30,11 +30,7 @@ public class DataSeeder
                 var values = line.Split(';');
 
                 var year = values[0];
-                var winner = values[4].ToLower() == "yes" ? true : false;
-                
-                var title = values[1];
-                var studio = values[2];
-                var producer = values[3];                
+                var winner = values[4].ToLower() == "yes" ? true : false;                
 
                 var movie = new Movie()
                 {

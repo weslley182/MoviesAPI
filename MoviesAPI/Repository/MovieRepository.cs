@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Data;
+using MoviesAPI.Dto;
 using MoviesAPI.Models;
 using MoviesAPI.Repository.Interface;
+using System.Collections.Generic;
 
 namespace MoviesAPI.Repository
 {
@@ -27,23 +29,109 @@ namespace MoviesAPI.Repository
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task<Movie> GetBiggestPrizeRange()
+        public async Task<PrizeInterval> GetBiggestPrizeRange()
         {
             var movies = await _context.Movies
                 .AsNoTracking()
                 .ToListAsync();
             
-            var prod = movies.Where(p => p.Winner == true).FirstOrDefault();
-            return prod;
+            var winnerMovies = movies.Where(p => p.Winner == true).ToList();
+
+            var newMovies = GetSplitedProducers(winnerMovies);
+
+            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
+
+            var minInterval = 0;
+            
+            PrizeInterval prizeInt = null;
+
+            query.ForEach(q =>
+            {
+                var min = q.Select(p => p.Year).Min();
+                var max = q.Select(p => p.Year).Max();
+                var interval = max - min;
+                if(interval > minInterval)
+                {
+                    minInterval = interval;
+                    prizeInt = new PrizeInterval()
+                    {
+                        Producer = q.Select(a => a.Producers).FirstOrDefault(),
+                        Interval = minInterval,
+                        PreviousWin = min,
+                        FollowingWin = max
+                    };
+                }
+                
+            });
+
+
+            return prizeInt;
         }
 
-        public async Task<Movie> GetTwoFastestPrizes()
+        public async Task<PrizeInterval> GetTwoFastestPrizes()
         {
-            var movies =  await _context.Movies
+            var movies = await _context.Movies
                 .AsNoTracking()
                 .ToListAsync();
-            var prod = movies.Where(p => p.Winner == true).FirstOrDefault();
-            return prod;
+
+            var winnerMovies = movies.Where(p => p.Winner == true).ToList();
+
+            var newMovies = GetSplitedProducers(winnerMovies);
+
+            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
+
+            var maxInterval = 999999;
+
+            PrizeInterval prizeInt = null;
+
+            query.ForEach(q =>
+            {
+                var min = q.Select(p => p.Year).Min();
+                var max = q.Select(p => p.Year).Max();
+                var interval = max - min;
+                if (interval < maxInterval)
+                {
+                    maxInterval = interval;
+                    prizeInt = new PrizeInterval()
+                    {
+                        Producer = q.Select(a => a.Producers).FirstOrDefault(),
+                        Interval = maxInterval,
+                        PreviousWin = min,
+                        FollowingWin = max
+                    };
+                }
+
+            });
+
+            return prizeInt;
+        }
+
+        private List<Movie> GetSplitedProducers(List<Movie> winnerMovies)
+        {
+            var movies = new List<Movie>();
+
+            winnerMovies.ForEach(p =>
+            {
+                var produc = p.Producers.Split(new string[] { " and ", "," }, StringSplitOptions.None);
+
+                for (var i = 0; i < produc.Length; i++)
+                {
+                    var mov = new Movie()
+                    {
+                        Id = p.Id,
+                        Producers = produc[i].Trim(),
+                        Studios = p.Studios,
+                        Title = p.Title,
+                        Winner = p.Winner,
+                        Year = p.Year
+                    };
+
+                    movies.Add(mov);
+                }
+
+            });
+
+            return movies;
         }
 
     }

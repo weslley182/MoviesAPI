@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Dto;
 using MoviesAPI.Models;
 using MoviesAPI.Repository.Interface;
 
@@ -34,13 +35,19 @@ public class MovieController: ControllerBase
     [Route("Movies/BiggestPrizeRangeAndTwoFastestPrizes")]
     public async Task<ActionResult> GetBiggestPrizeRange()
     {
-        var movieslist = new List<Movie>
+        var max = new List<PrizeInterval>();
+        max.Add(await _repo.GetBiggestPrizeRange());
+
+        var min = new List<PrizeInterval>();
+        min.Add(await _repo.GetTwoFastestPrizes());
+
+        var prizesList = new Prizes
         {
-            await _repo.GetBiggestPrizeRange(),
-            await _repo.GetTwoFastestPrizes()
+            Max = max,
+            Min = min            
         };
 
-        return Ok(movieslist);
+        return Ok(prizesList);
     }
 
 }
