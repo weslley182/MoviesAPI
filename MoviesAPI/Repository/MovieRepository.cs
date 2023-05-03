@@ -26,5 +26,25 @@ namespace MoviesAPI.Repository
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
+
+        public async Task<Movie> GetBiggestPrizeRange()
+        {
+            var movies = await _context.Movies
+                .AsNoTracking()
+                .ToListAsync();
+            
+            var prod = movies.Where(p => p.Winner == true).FirstOrDefault();
+            return prod;
+        }
+
+        public async Task<Movie> GetTwoFastestPrizes()
+        {
+            var movies =  await _context.Movies
+                .AsNoTracking()
+                .ToListAsync();
+            var prod = movies.Where(p => p.Winner == true).FirstOrDefault();
+            return prod;
+        }
+
     }
 }

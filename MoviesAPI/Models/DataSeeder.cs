@@ -15,22 +15,41 @@ public class DataSeeder
         if (_context.Movies.Any())
         {
             return;
-        }
+        }        
 
-        var movies = new List<Movie>()
+        var movies = new List<Movie>();
+
+        string filePath = @"Data\movielist.csv";
+        using (StreamReader reader = new StreamReader(filePath))
         {
-            new Movie()
-            {
-                Producers = "Teste",
-                Studios = "Teste",
-                Title = "Funcionou o Seeder",
-                Winner = false,
-                Year = 2023
-            }
-        };
+            reader.ReadLine();
 
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                var values = line.Split(';');
+
+                var year = values[0];
+                var winner = values[4].ToLower() == "yes" ? true : false;
+                
+                var title = values[1];
+                var studio = values[2];
+                var producer = values[3];                
+
+                var movie = new Movie()
+                {
+                    Year = int.Parse(year),
+                    Title = values[1],
+                    Studios = values[2],
+                    Producers = values[3],
+                    Winner = winner
+                };
+
+                movies.Add(movie);
+            }
+        }
+        
         _context.Movies.AddRange(movies);
         _context.SaveChanges();
-
     }
 }

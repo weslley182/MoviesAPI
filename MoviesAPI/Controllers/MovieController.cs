@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MoviesAPI.Models;
 using MoviesAPI.Repository.Interface;
 
 namespace MoviesAPI.Controllers;
@@ -30,11 +31,21 @@ public class MovieController: ControllerBase
     }
 
     [HttpGet]
-    [Route("Movies/all")]
-    public async Task<ActionResult> GetAsk()
+    [Route("Movies/BiggestPrizeRangeAndTwoFastestPrizes")]
+    public async Task<ActionResult> GetBiggestPrizeRange()
     {
-        var movies = _repo.GetAllAsync();
-        return Ok(movies);
+        var movies = await _repo.GetAllAsync();
+        var prodBiggestPrizeRange = movies.Where(p => p.Winner == true).FirstOrDefault();
+        
+        var prodTwoFastestPrizes = movies.Where(p => p.Winner == true).FirstOrDefault();
+
+        var movieslist = new List<Movie>
+        {
+            await _repo.GetBiggestPrizeRange(),
+            await _repo.GetTwoFastestPrizes()
+        };
+
+        return Ok(movieslist);
     }
 
 }
