@@ -13,3 +13,7 @@ Run commands:
 
 To seed:
  -dotnet run seeddata
+ 
+ 
+ Proceed tests on:
+ - https://localhost:7250/swagger/index.html
