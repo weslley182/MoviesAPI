@@ -39,7 +39,7 @@ namespace MoviesAPI.Repository
 
             var newMovies = GetSplitedProducers(winnerMovies);
 
-            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
+            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 0).ToList();
 
             var minInterval = 0;
             
@@ -78,7 +78,7 @@ namespace MoviesAPI.Repository
 
             var newMovies = GetSplitedProducers(winnerMovies);
 
-            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
+            var query = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 0).ToList();
 
             var maxInterval = 999999;
 
