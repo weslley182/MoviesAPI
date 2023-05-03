@@ -34,11 +34,6 @@ public class MovieController: ControllerBase
     [Route("Movies/BiggestPrizeRangeAndTwoFastestPrizes")]
     public async Task<ActionResult> GetBiggestPrizeRange()
     {
-        var movies = await _repo.GetAllAsync();
-        var prodBiggestPrizeRange = movies.Where(p => p.Winner == true).FirstOrDefault();
-        
-        var prodTwoFastestPrizes = movies.Where(p => p.Winner == true).FirstOrDefault();
-
         var movieslist = new List<Movie>
         {
             await _repo.GetBiggestPrizeRange(),
