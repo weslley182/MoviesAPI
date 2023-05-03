@@ -3,7 +3,6 @@ using MoviesAPI.Data;
 using MoviesAPI.Dto;
 using MoviesAPI.Models;
 using MoviesAPI.Repository.Interface;
-using System.Collections.Generic;
 
 namespace MoviesAPI.Repository
 {
@@ -60,8 +59,7 @@ namespace MoviesAPI.Repository
                         PreviousWin = min,
                         FollowingWin = max
                     };
-                }
-                
+                }                
             });
 
 
