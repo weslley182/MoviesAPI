@@ -18,7 +18,7 @@ public class MovieController: ControllerBase
     [Route("Movies")]
     public async Task<ActionResult> GetAll()
     {
-        var movies = _repo.GetAllAsync();
+        var movies = await _repo.GetAllAsync();
         return Ok(movies);
     }
 
@@ -26,7 +26,7 @@ public class MovieController: ControllerBase
     [Route("Movies/{id}")]
     public async Task<ActionResult> GetById([FromRoute] int id)
     {
-        var movie = _repo.GetByIdAsync(id);
+        var movie = await _repo.GetByIdAsync(id);
         return movie == null ? NotFound() : Ok(movie);
     }
 
