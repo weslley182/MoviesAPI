@@ -5,6 +5,7 @@
  - Visual Studio 2022 Community Or VS Code
  - Sqlite3
  - SDK .Net 6
+ - Entity Framework
  
 ## Run commands:
   ```bash
@@ -24,6 +25,7 @@
  
 ## Running the app:
  - https://localhost:7250/swagger/index.html
+ - http://localhost:5207/swagger/index.html
  
 ## Test, on MoviesAPI.Tests
 
