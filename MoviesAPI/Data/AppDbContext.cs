@@ -3,13 +3,13 @@ using MoviesAPI.Models;
 
 namespace MoviesAPI.Data;
 
-public class AppDbContext: DbContext
+public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
-        :base(options)
+        : base(options)
     {
-        
+
     }
-    public DbSet<Movie> Movies { get; set; }    
+    public DbSet<Movie> Movies { get; set; }
 
 }

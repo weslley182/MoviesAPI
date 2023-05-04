@@ -6,7 +6,7 @@ namespace MoviesAPI.Controllers;
 
 [ApiController]
 [Route(template: "v1/Prizes")]
-public class PrizesController: ControllerBase
+public class PrizesController : ControllerBase
 {
     private readonly IMovieRepository _repo;
     public PrizesController(IMovieRepository repo)

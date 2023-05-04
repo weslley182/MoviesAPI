@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MoviesAPI.Dto;
+﻿using MoviesAPI.Dto;
 using MoviesAPI.Models;
 
 namespace MoviesAPI.Repository.Interface;

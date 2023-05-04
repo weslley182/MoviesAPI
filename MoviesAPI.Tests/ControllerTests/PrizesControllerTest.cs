@@ -1,25 +1,35 @@
-﻿using MoviesAPI.Dto;
+﻿using Microsoft.Extensions.Configuration;
+using MoviesAPI.Dto;
 using NUnit.Framework;
-using System.Net.Http.Json;
 using System.Net;
-
+using System.Net.Http.Json;
 
 namespace MoviesAPI.Tests.ControllerTests
 {
     public class PrizesControllerTest
     {
         private MoviesAPIApplication _application;
+        private MovieMockData _mock;
+        private IConfiguration _configuration;
 
         [SetUp]
         public void SetUp()
         {
+
             _application = new MoviesAPIApplication();
+
+            _configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", false, false)
+                .Build();
+
+            _mock = new MovieMockData(_configuration);
         }
 
         [Test]
         public async Task GET_Return_GetBiggestPrizeRange_and_GetTwoFastestPrizes()
         {
-            await MovieMockData.CreateMovies(_application, true);
+            await _mock.CreateMovies(_application, true);
             var url = "/v1/Prizes/BiggestPrizeRangeAndTwoFastestPrizes";
 
             var client = _application.CreateClient();

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Data;
 using MoviesAPI.Dto;
 using MoviesAPI.Models;
@@ -7,14 +6,14 @@ using MoviesAPI.Repository.Interface;
 
 namespace MoviesAPI.Repository
 {
-    public class MovieRepository: IMovieRepository
+    public class MovieRepository : IMovieRepository
     {
         private readonly AppDbContext _context;
         public MovieRepository(AppDbContext context)
         {
             _context = context;
         }
-        
+
         public async Task<List<Movie>> GetAllAsync()
         {
             return await _context.Movies
@@ -72,7 +71,7 @@ namespace MoviesAPI.Repository
             var groupProducers = await GetGroupProducers();
 
             var minInterval = 0;
-            
+
             PrizeIntervalDto prizeInt = null;
 
             groupProducers.ForEach(q =>
@@ -80,7 +79,7 @@ namespace MoviesAPI.Repository
                 var min = q.Select(p => p.Year).Min();
                 var max = q.Select(p => p.Year).Max();
                 var interval = max - min;
-                if(interval > minInterval)
+                if (interval > minInterval)
                 {
                     minInterval = interval;
                     prizeInt = new PrizeIntervalDto()
@@ -90,7 +89,7 @@ namespace MoviesAPI.Repository
                         PreviousWin = min,
                         FollowingWin = max
                     };
-                }                
+                }
             });
 
 

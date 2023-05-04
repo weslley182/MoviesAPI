@@ -15,7 +15,7 @@ public class DataSeeder
         if (_context.Movies.Any())
         {
             return;
-        }        
+        }
 
         var movies = new List<Movie>();
 
@@ -30,7 +30,7 @@ public class DataSeeder
                 var values = line.Split(';');
 
                 var year = values[0];
-                var winner = values[4].ToLower() == "yes" ? true : false;                
+                var winner = values[4].ToLower() == "yes" ? true : false;
 
                 var movie = new Movie()
                 {
@@ -44,7 +44,7 @@ public class DataSeeder
                 movies.Add(movie);
             }
         }
-        
+
         _context.Movies.AddRange(movies);
         _context.SaveChanges();
     }

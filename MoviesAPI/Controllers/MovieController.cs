@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MoviesAPI.Dto;
 using MoviesAPI.Models;
 using MoviesAPI.Repository.Interface;
@@ -7,8 +6,8 @@ using MoviesAPI.Repository.Interface;
 namespace MoviesAPI.Controllers;
 
 [ApiController]
-[Route(template:"v1/Movies")]
-public class MovieController: ControllerBase
+[Route(template: "v1/Movies")]
+public class MovieController : ControllerBase
 {
     private readonly IMovieRepository _repo;
     public MovieController(IMovieRepository repo)
@@ -16,7 +15,7 @@ public class MovieController: ControllerBase
         _repo = repo;
     }
 
-    [HttpGet]    
+    [HttpGet]
     public async Task<ActionResult> GetAll()
     {
         var movies = await _repo.GetAllAsync();
@@ -61,14 +60,14 @@ public class MovieController: ControllerBase
         {
             return BadRequest();
         }
-        
+
         var movie = await _repo.GetByIdAsync(id);
-        
-        if(movie == null)
+
+        if (movie == null)
         {
-            return NotFound(); 
+            return NotFound();
         }
-        
+
         movie.Producers = movieDto.Producers;
         movie.Studios = movieDto.Studios;
         movie.Title = movieDto.Title;
@@ -76,7 +75,7 @@ public class MovieController: ControllerBase
         movie.Year = movieDto.Year;
 
         await _repo.Update(movie);
-        
+
         return Ok();
     }
 
@@ -92,6 +91,6 @@ public class MovieController: ControllerBase
 
         await _repo.Delete(movie);
         return Ok();
-    }    
+    }
 
 }

@@ -1,21 +1,32 @@
-﻿using MoviesAPI.Models;
-using System.Net.Http.Json;
-using System.Net;
-using NUnit.Framework;
+﻿using Microsoft.Extensions.Configuration;
 using MoviesAPI.Dto;
-using System.Text;
+using MoviesAPI.Models;
 using Newtonsoft.Json;
+using NUnit.Framework;
+using System.Net;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace MoviesAPI.Tests.ControllerTests;
 
 public class MoviesControllerTest
 {
     private MoviesAPIApplication _application;
+    private MovieMockData _mock;
+    private IConfiguration _configuration;
 
     [SetUp]
     public void SetUp()
     {
+
         _application = new MoviesAPIApplication();
+
+        _configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", false, false)
+            .Build();
+
+        _mock = new MovieMockData(_configuration);
     }
 
     [Test]
@@ -24,7 +35,7 @@ public class MoviesControllerTest
         var expectedQuantity = 50;
         var columnNamesQtd = 1;
 
-        await MovieMockData.CreateMovies(_application, true, expectedQuantity + columnNamesQtd);
+        await _mock.CreateMovies(_application, true, expectedQuantity + columnNamesQtd);
         var url = "/v1/Movies";
 
         var client = _application.CreateClient();
@@ -40,7 +51,7 @@ public class MoviesControllerTest
     [Test]
     public async Task GET_Return_Movies_Null()
     {
-        await MovieMockData.CreateMovies(_application, false);
+        await _mock.CreateMovies(_application, false);
         var url = "/v1/Movies";
 
         var client = _application.CreateClient();
@@ -53,7 +64,7 @@ public class MoviesControllerTest
     [Test]
     public async Task POST_Must_Create_Movie()
     {
-        await MovieMockData.CreateMovies(_application, false);
+        await _mock.CreateMovies(_application, false);
         var url = "/v1/Movies";
 
         var client = _application.CreateClient();
@@ -67,24 +78,24 @@ public class MoviesControllerTest
 
         var result = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(newMovie), Encoding.UTF8, "application/json"));
 
-        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);        
+        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
     }
 
     [Test]
     public async Task POST_Must_Send_Error_On_Create_Movie()
     {
-        await MovieMockData.CreateMovies(_application, false);
+        await _mock.CreateMovies(_application, false);
         var url = "/v1/Movies";
 
         var client = _application.CreateClient();
         var newMovie = new MovieDto()
-        {            
+        {
             Title = "Jhon no arms",
             Year = 1984,
             Winner = true
         };
 
-        var result = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(newMovie), Encoding.UTF8, "application/json"));        
+        var result = await client.PostAsync(url, new StringContent(JsonConvert.SerializeObject(newMovie), Encoding.UTF8, "application/json"));
 
         Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
     }
@@ -92,7 +103,7 @@ public class MoviesControllerTest
     [Test]
     public async Task PUT_Must_Change_Movie()
     {
-        await MovieMockData.CreateMovies(_application, true, 10);
+        await _mock.CreateMovies(_application, true, 10);
         var url = "/v1/Movies/5";
 
         var client = _application.CreateClient();
@@ -119,12 +130,12 @@ public class MoviesControllerTest
     [Test]
     public async Task PUT_Must_Send_Error()
     {
-        await MovieMockData.CreateMovies(_application, true, 10);
+        await _mock.CreateMovies(_application, true, 10);
         var url = "/v1/Movies/5";
 
         var client = _application.CreateClient();
         var changeMovie = new MovieDto()
-        {         
+        {
             Studios = "Warner",
             Year = 1984,
             Winner = true
@@ -133,27 +144,27 @@ public class MoviesControllerTest
         var result = await client.PutAsync(url, new StringContent(JsonConvert.SerializeObject(changeMovie), Encoding.UTF8, "application/json"));
 
         Assert.AreEqual(HttpStatusCode.BadRequest, result.StatusCode);
-        
+
     }
 
     [Test]
     public async Task Delete_Must_Remove_Movie()
     {
-        await MovieMockData.CreateMovies(_application, true, 10);
+        await _mock.CreateMovies(_application, true, 10);
         var url = "/v1/Movies/5";
 
-        var client = _application.CreateClient();        
+        var client = _application.CreateClient();
 
-        var result = await client.DeleteAsync(url);        
+        var result = await client.DeleteAsync(url);
 
-        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);        
+        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
 
     }
 
     [Test]
     public async Task Delete_Must_Send_NotFound()
     {
-        await MovieMockData.CreateMovies(_application, true, 10);
+        await _mock.CreateMovies(_application, true, 10);
         var url = "/v1/Movies/15";
 
         var client = _application.CreateClient();
