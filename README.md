@@ -1,8 +1,8 @@
 # MoviesAPI
 
-## On Windows:
+## On Windows and Linux:
 
- - Visual Studio 2022 Community
+ - Visual Studio 2022 Community Or VS Code
  - Sqlite3
  - SDK .Net 6
  
@@ -31,6 +31,10 @@
 
  $ dotnet test
  or Test/Run All Tests on Visual Studio
+ 
+ - On Linux, update Path To:
+ - "CSVPath": "../../../Data/movielist.csv"
+
 
 
  ``` 
