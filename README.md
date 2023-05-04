@@ -4,7 +4,8 @@
 
  - Visual Studio 2022 Community
  - Sqlite3
-
+ - SDK .Net 6
+ 
 ## Run commands:
   ```bash
   

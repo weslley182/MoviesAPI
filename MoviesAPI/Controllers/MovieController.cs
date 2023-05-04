@@ -20,7 +20,7 @@ public class MovieController: ControllerBase
     public async Task<ActionResult> GetAll()
     {
         var movies = await _repo.GetAllAsync();
-        return Ok(movies);
+        return !movies.Any() ? NotFound() : Ok(movies);
     }
 
     [HttpGet]
@@ -35,11 +35,15 @@ public class MovieController: ControllerBase
     [Route("Movies/BiggestPrizeRangeAndTwoFastestPrizes")]
     public async Task<ActionResult> GetBiggestPrizeRange()
     {
-        var max = new List<PrizeIntervalDto>();
-        max.Add(await _repo.GetBiggestPrizeRange());
+        var max = new List<PrizeIntervalDto>
+        {
+            await _repo.GetBiggestPrizeRange()
+        };
 
-        var min = new List<PrizeIntervalDto>();
-        min.Add(await _repo.GetTwoFastestPrizes());
+        var min = new List<PrizeIntervalDto>
+        {
+            await _repo.GetTwoFastestPrizes()
+        };
 
         var prizesList = new PrizesDto
         {

@@ -1,27 +1,35 @@
-﻿using System.Net.Http.Json;
-using System.Net;
+﻿using MoviesAPI.Dto;
 using MoviesAPI.Models;
+using System.Net.Http.Json;
+using System.Net;
 using NUnit.Framework;
-using MoviesAPI.Dto;
+
 
 namespace MoviesAPI.Tests;
 
 public class GetMoviesTest
 {
+    private MoviesAPIApplication _application;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _application = new MoviesAPIApplication();
+    }
+
     [Test]
     public async Task GET_Return_All_Movies()
     {
         var expectedQuantity = 50;
-        var jumpLine = 1;
-        await using var application = new MoviesAPIApplication();
+        var columnNamesQtd = 1;        
 
-        await MovieMockData.CreateMovies(application, true, (expectedQuantity + jumpLine));
+        await MovieMockData.CreateMovies(_application, true, (expectedQuantity + columnNamesQtd));
         var url = "/v1/Movies";
 
-        var client = application.CreateClient();
+        var client = _application.CreateClient();
 
         var result = await client.GetAsync(url);
-        var movies = await client.GetFromJsonAsync<List<Movie>>("/v1/Movies");
+        var movies = await client.GetFromJsonAsync<List<Movie>>(url);
 
         Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         Assert.IsNotNull(movies);
@@ -31,29 +39,26 @@ public class GetMoviesTest
     [Test]
     public async Task GET_Return_Movies_Null()
     {
-        await using var application = new MoviesAPIApplication();
-
-        await MovieMockData.CreateMovies(application, false);
-
-        var client = application.CreateClient();
-        var movies = await client.GetFromJsonAsync<List<Movie>>("/v1/Movies");        
+        await MovieMockData.CreateMovies(_application, false);
+        var url = "/v1/Movies";
         
-        Assert.IsNotNull(movies);
-        Assert.IsTrue(movies.Count == 0);
+        var client = _application.CreateClient();
+
+        var result = await client.GetAsync(url);
+        
+        Assert.AreEqual(HttpStatusCode.NotFound, result.StatusCode);        
     }
 
     [Test]
     public async Task GET_Return_GetBiggestPrizeRange_and_GetTwoFastestPrizes()
-    {
-        await using var application = new MoviesAPIApplication();
-
-        await MovieMockData.CreateMovies(application, true);
+    {     
+        await MovieMockData.CreateMovies(_application, true);
         var url = "/v1/Movies/BiggestPrizeRangeAndTwoFastestPrizes";
 
-        var client = application.CreateClient();
+        var client = _application.CreateClient();
 
         var result = await client.GetAsync(url);
-        var prizes = await client.GetFromJsonAsync<PrizesDto>("/v1/Movies/BiggestPrizeRangeAndTwoFastestPrizes");
+        var prizes = await client.GetFromJsonAsync<PrizesDto>(url);
 
         Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         Assert.IsNotNull(prizes);
