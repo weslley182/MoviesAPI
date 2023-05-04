@@ -28,7 +28,7 @@ namespace MoviesAPI.Repository
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task<PrizeInterval> GetBiggestPrizeRange()
+        public async Task<PrizeIntervalDto> GetBiggestPrizeRange()
         {
             var winnerMovies = await _context.Movies
                 .Where(p => p.Winner == true)
@@ -41,7 +41,7 @@ namespace MoviesAPI.Repository
 
             var minInterval = 0;
             
-            PrizeInterval prizeInt = null;
+            PrizeIntervalDto prizeInt = null;
 
             groupProducers.ForEach(q =>
             {
@@ -51,7 +51,7 @@ namespace MoviesAPI.Repository
                 if(interval > minInterval)
                 {
                     minInterval = interval;
-                    prizeInt = new PrizeInterval()
+                    prizeInt = new PrizeIntervalDto()
                     {
                         Producer = q.Select(a => a.Producers).FirstOrDefault(),
                         Interval = minInterval,
@@ -65,7 +65,7 @@ namespace MoviesAPI.Repository
             return prizeInt;
         }
 
-        public async Task<PrizeInterval> GetTwoFastestPrizes()
+        public async Task<PrizeIntervalDto> GetTwoFastestPrizes()
         {
             var winnerMovies = await _context.Movies
                 .Where(p => p.Winner == true)
@@ -78,7 +78,7 @@ namespace MoviesAPI.Repository
 
             var maxInterval = 999999;
 
-            PrizeInterval prizeInt = null;
+            PrizeIntervalDto prizeInt = null;
 
             groupProducers.ForEach(q =>
             {
@@ -88,7 +88,7 @@ namespace MoviesAPI.Repository
                 if (interval < maxInterval)
                 {
                     maxInterval = interval;
-                    prizeInt = new PrizeInterval()
+                    prizeInt = new PrizeIntervalDto()
                     {
                         Producer = q.Select(a => a.Producers).FirstOrDefault(),
                         Interval = maxInterval,

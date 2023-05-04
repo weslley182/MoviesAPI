@@ -8,6 +8,6 @@ public interface IMovieRepository
 {
     Task<List<Movie>> GetAllAsync();
     Task<Movie?> GetByIdAsync(int Id);
-    Task<PrizeInterval> GetBiggestPrizeRange();
-    Task<PrizeInterval> GetTwoFastestPrizes();
+    Task<PrizeIntervalDto> GetBiggestPrizeRange();
+    Task<PrizeIntervalDto> GetTwoFastestPrizes();
 }

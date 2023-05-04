@@ -1,6 +1,6 @@
 ﻿namespace MoviesAPI.Dto;
 
-public class PrizeInterval
+public class PrizeIntervalDto
 {
     public string? Producer { get; set; }
     public int Interval { get; set; }

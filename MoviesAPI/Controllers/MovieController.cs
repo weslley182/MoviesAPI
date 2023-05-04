@@ -35,13 +35,13 @@ public class MovieController: ControllerBase
     [Route("Movies/BiggestPrizeRangeAndTwoFastestPrizes")]
     public async Task<ActionResult> GetBiggestPrizeRange()
     {
-        var max = new List<PrizeInterval>();
+        var max = new List<PrizeIntervalDto>();
         max.Add(await _repo.GetBiggestPrizeRange());
 
-        var min = new List<PrizeInterval>();
+        var min = new List<PrizeIntervalDto>();
         min.Add(await _repo.GetTwoFastestPrizes());
 
-        var prizesList = new Prizes
+        var prizesList = new PrizesDto
         {
             Max = max,
             Min = min            
