@@ -6,7 +6,7 @@ namespace MoviesAPI.Tests;
 
 public class MovieMockData
 {
-    public static async Task CreateMovies(MoviesAPIApplication application, bool create)
+    public static async Task CreateMovies(MoviesAPIApplication application, bool create, int quantity = 0)
     {
         using (var scope = application.Services.CreateScope())
         {
@@ -14,26 +14,41 @@ public class MovieMockData
             using (var context = provider.GetRequiredService<AppDbContext>())
             {
                 await context.Database.EnsureCreatedAsync();
-
+                var count = 0;
                 if (create)
                 {
-                    await context.Movies.AddAsync(new Movie { 
-                        Id = 1,
-                        Producers = "Jhon",
-                        Studios = "Warner",
-                        Title = "Jhon no arms",
-                        Year = 1990,
-                        Winner = true
-                    });
+                    string filePath = @"..\..\..\Data\movielist.csv";
+                    using (StreamReader reader = new StreamReader(filePath))
+                    {
+                        reader.ReadLine();
 
-                    await context.Movies.AddAsync(new Movie {
-                        Id = 2,
-                        Producers = "Mary",
-                        Studios = "Warner",
-                        Title = "Mary no arms",
-                        Year = 1992,
-                        Winner = true
-                    });
+                        while (!reader.EndOfStream)
+                        {
+                            count++;
+                            if(quantity > 0 && quantity == count)
+                            {
+                                break;
+                            }
+
+                            var line = reader.ReadLine();
+                            var values = line.Split(';');
+
+                            var year = values[0];
+                            var winner = values[4].ToLower() == "yes" ? true : false;
+
+                            var movie = new Movie()
+                            {
+                                Year = int.Parse(year),
+                                Title = values[1],
+                                Studios = values[2],
+                                Producers = values[3],
+                                Winner = winner
+                            };
+
+                            await context.Movies.AddAsync(movie);
+                            
+                        }
+                    }                   
 
                     await context.SaveChangesAsync();
                 }

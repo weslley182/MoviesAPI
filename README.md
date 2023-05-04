@@ -28,7 +28,8 @@
 
  ```bash
 
- $ npm run test
+ $ dotnet test
+ or Test/Run All Tests on Visual Studio
 
 
  ``` 
