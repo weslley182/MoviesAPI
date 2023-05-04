@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Data;
 using MoviesAPI.Dto;
 using MoviesAPI.Models;
@@ -27,17 +28,48 @@ namespace MoviesAPI.Repository
                 .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
+        public async Task Add(Movie movie)
+        {
+            try
+            {
+                await _context.Movies.AddAsync(movie);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error on create Movie: " + e.Message);
+            }
+        }
+
+        public async Task Update(Movie movie)
+        {
+            try
+            {
+                _context.Movies.Update(movie);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error on update Movie: " + e.Message);
+            }
+        }
+
+        public async Task Delete(Movie movie)
+        {
+            try
+            {
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error on delete Movie: " + e.Message);
+            }
+        }
 
         public async Task<PrizeIntervalDto> GetBiggestPrizeRange()
         {
-            var winnerMovies = await _context.Movies
-                .Where(p => p.Winner == true)
-                .AsNoTracking()
-                .ToListAsync();
-
-            var newMovies = GetSplitedProducers(winnerMovies);
-
-            var groupProducers = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
+            var groupProducers = await GetGroupProducers();
 
             var minInterval = 0;
             
@@ -67,14 +99,7 @@ namespace MoviesAPI.Repository
 
         public async Task<PrizeIntervalDto> GetTwoFastestPrizes()
         {
-            var winnerMovies = await _context.Movies
-                .Where(p => p.Winner == true)
-                .AsNoTracking()
-                .ToListAsync();            
-
-            var newMovies = GetSplitedProducers(winnerMovies);
-
-            var groupProducers = newMovies.GroupBy(x => x.Producers).Where(g => g.Count() > 1).ToList();
+            var groupProducers = await GetGroupProducers();
 
             var maxInterval = 999999;
 
@@ -128,6 +153,21 @@ namespace MoviesAPI.Repository
             });
 
             return movies;
+        }
+
+        private async Task<List<IGrouping<string, Movie>>> GetGroupProducers()
+        {
+            var winnerMovies = await _context.Movies
+                .Where(p => p.Winner == true)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var newMovies = GetSplitedProducers(winnerMovies);
+
+            return newMovies
+                .GroupBy(x => x.Producers)
+                .Where(g => g.Count() > 1)
+                .ToList();
         }
 
     }
