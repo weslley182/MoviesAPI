@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalVisibleTo Include="MoviesAPI.Tests\" />
+    <InternalVisibleTo Include="MoviesAPI.Tests" />
   </ItemGroup>
 
 </Project>
