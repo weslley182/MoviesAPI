@@ -15,7 +15,7 @@
  
  ```
  
-## To seed:
+## To seed, On MoviesAPI:
  ```bash
  
  $ dotnet run seeddata
@@ -25,7 +25,7 @@
 ## Running the app:
  - https://localhost:7250/swagger/index.html
  
-## Test
+## Test, on MoviesAPI.Tests
 
  ```bash
 

@@ -7,7 +7,7 @@ using MoviesAPI.Repository.Interface;
 namespace MoviesAPI.Controllers;
 
 [ApiController]
-[Route(template:"v1")]
+[Route(template:"v1/Movies")]
 public class MovieController: ControllerBase
 {
     private readonly IMovieRepository _repo;
@@ -16,8 +16,7 @@ public class MovieController: ControllerBase
         _repo = repo;
     }
 
-    [HttpGet]
-    [Route("Movies")]
+    [HttpGet]    
     public async Task<ActionResult> GetAll()
     {
         var movies = await _repo.GetAllAsync();
@@ -25,7 +24,7 @@ public class MovieController: ControllerBase
     }
 
     [HttpGet]
-    [Route("Movies/{id}")]
+    [Route("{id}")]
     public async Task<ActionResult> GetById([FromRoute] int id)
     {
         var movie = await _repo.GetByIdAsync(id);
@@ -33,7 +32,7 @@ public class MovieController: ControllerBase
     }
 
 
-    [HttpPost("Movies")]
+    [HttpPost]
     public async Task<ActionResult> PostAsync([FromBody] MovieDto movieDto)
     {
         if (!ModelState.IsValid)
@@ -55,7 +54,7 @@ public class MovieController: ControllerBase
         return Ok();
     }
 
-    [HttpPut("Movies/{id}")]
+    [HttpPut("{id}")]
     public async Task<ActionResult> PutAsync([FromBody] MovieDto movieDto, [FromRoute] int id)
     {
         if (!ModelState.IsValid)
@@ -81,7 +80,7 @@ public class MovieController: ControllerBase
         return Ok();
     }
 
-    [HttpDelete("Movies/{id}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAsync([FromRoute] int id)
     {
         var movie = await _repo.GetByIdAsync(id);
@@ -93,29 +92,6 @@ public class MovieController: ControllerBase
 
         await _repo.Delete(movie);
         return Ok();
-    }
-
-    [HttpGet]
-    [Route("Movies/BiggestPrizeRangeAndTwoFastestPrizes")]
-    public async Task<ActionResult> GetBiggestPrizeRange()
-    {
-        var max = new List<PrizeIntervalDto>
-        {
-            await _repo.GetBiggestPrizeRange()
-        };
-
-        var min = new List<PrizeIntervalDto>
-        {
-            await _repo.GetTwoFastestPrizes()
-        };
-
-        var prizesList = new PrizesDto
-        {
-            Max = max,
-            Min = min            
-        };
-
-        return Ok(prizesList);
-    }
+    }    
 
 }
