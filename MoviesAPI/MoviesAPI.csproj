@@ -20,4 +20,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalVisibleTo Include="MoviesAPI.Tests\" />
+  </ItemGroup>
+
 </Project>

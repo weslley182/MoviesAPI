@@ -1,18 +1,34 @@
 # MoviesAPI
 
-On Windows:
+## On Windows:
 
  - Visual Studio 2022 Community
  - Sqlite3
 
-Run commands:
- - dotnet clean
- - dotnet build
- - dotnet ef database update
-
-To seed:
- - dotnet run seeddata
+## Run commands:
+  ```bash
+  
+ $ dotnet clean
+ $ dotnet build
+ $ dotnet ef database update
  
+ ```
  
- Proceed tests on:
+## To seed:
+ ```bash
+ 
+ $ dotnet run seeddata
+ 
+ ``` 
+ 
+## Running the app:
  - https://localhost:7250/swagger/index.html
+ 
+## Test
+
+ ```bash
+
+ $ npm run test
+
+
+ ``` 
